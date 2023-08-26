@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Define the user schema
+// Define the company schema
 const companySchema = new mongoose.Schema({
   company_name: {
     type: String,
@@ -9,6 +9,6 @@ const companySchema = new mongoose.Schema({
   },
 });
 
-// Create the user model using the schema
+// Create the company model using the schema
 const companyModel = mongoose.model("Carrier", companySchema);
 module.exports = companyModel;

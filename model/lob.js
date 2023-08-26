@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // Define the user schema
 const lobSchema = new mongoose.Schema({
-  lob_name: {
+  category_name: {
     type: String,
     required: true,
     trim: true,

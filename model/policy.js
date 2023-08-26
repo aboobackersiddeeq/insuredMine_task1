@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 
 // Define the user schema
-const polcySchema = new mongoose.Schema(
+const policySchema = new mongoose.Schema(
   {
     policy_number: {
-      type: Number,
+      type: String,
       required: true,
-      trim: true,
     },
     policy_mode: {
       type: String,
@@ -14,7 +13,7 @@ const polcySchema = new mongoose.Schema(
       trim: true,
     },
     policy_type: {
-      type: Number,
+      type: String,
       trim: true,
       required: true,
     },
@@ -32,19 +31,19 @@ const polcySchema = new mongoose.Schema(
       trim: true,
     },
     user_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     company_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Carrier",
     },
     lob_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "LOB",
     },
     agent_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Agent",
     },
   },
@@ -54,6 +53,6 @@ const polcySchema = new mongoose.Schema(
 );
 
 // Create the user model using the schema
-const UserModel = mongoose.model("Po", userSchema);
+const policyModel = mongoose.model("Policy", policySchema);
 
-module.exports = UserModel;
+module.exports = policyModel;

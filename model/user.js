@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // Define the user schema
 const userSchema = new mongoose.Schema(
   {
-    firstName: {
+    firstname: {
       type: String,
       required: true,
       trim: true,
@@ -11,39 +11,36 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
       lowercase: true,
       trim: true,
     },
     phone: {
-      type: Number,
+      type: String,
       trim: true,
       required: true,
     },
     gender: {
       type: String,
-      required: true,
-      lowercase: true,
       trim: true,
     },
     city: {
       type: String,
-      required: true,
       trim: true,
     },
     address: {
       type: String,
-      required: true,
       trim: true,
     },
     state: {
       type: String,
-      required: true,
       trim: true,
+    },
+    userType: {
+      type: String,
+      required: true,
     },
     zip: {
       type: String,
-      required: true,
       trim: true,
     },
     dob: {
@@ -52,13 +49,15 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     account_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Account",
     },
-    policy_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Policy",
-    },
+    policy_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Policy",
+      },
+    ],
   },
   {
     timestamps: true,

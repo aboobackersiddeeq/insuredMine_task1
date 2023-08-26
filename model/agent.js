@@ -1,17 +1,14 @@
 const mongoose = require("mongoose");
 
-// Define the user schema
-const agentSchema = new mongoose.Schema(
-  {
-    agent_name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+// Define the agent schema
+const agentSchema = new mongoose.Schema({
+  agent: {
+    type: String,
+    required: true,
+    trim: true,
   },
-   
-);
+});
 
-// Create the user model using the schema
-const UserModel = mongoose.model("Agent", agentSchema);
-module.exports = UserModel;
+// Create the agent model using the schema
+const agentModel = mongoose.model("Agent", agentSchema);
+module.exports = agentModel;

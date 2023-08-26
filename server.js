@@ -6,11 +6,10 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const multer = require("multer");
 const userRouter = require("./routers/user-router");
+const accountRouter = require("./routers/account-router");
+const policyRouter = require("./routers/policy-router");
 const csvRouter = require("./routers/csv-uploder-router");
-const { fileFilter, fileStorage } = require('./utils/multer-helper');
- 
 
 // Set the "public" directory path
 app.set("public", `${__dirname}/public`);
@@ -22,30 +21,23 @@ mongoose.set("strictQuery", true);
 mongoose.connect(process.env.DATABASE_URL).then(() => {
   console.log("Connected to the database successfully");
 });
-// Parse JSON and URL-encoded payloads
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 // Limit JSON payload size to 1100kb
 app.use(bodyParser.json({ limit: "1100kb" }));
-
-
-// // File upload configuration
-// app.use(
-//   multer({ storage: fileStorage, fileFilter }).fields([
-//     { name: "csv" },
-//     { name: "images", maxCount: 5 },
-//   ])
-// );
 
 // Configure CORS settings
 app.use(
   cors({
     origin: "*",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
 );
+
+// Parse JSON and URL-encoded payloads
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 
 // Logging middleware
 app.use(logger("dev"));
@@ -59,12 +51,13 @@ app.use(cookieParser());
 // Mount the user router at the "/api" route
 app.use("/api", csvRouter);
 app.use("/api/user", userRouter);
+app.use("/api/account", accountRouter);
+app.use("/api/policy", policyRouter);
 
 // Start the server
 const port = process.env.PORT || 3001;
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
 
 module.exports = app;
-
