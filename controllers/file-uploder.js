@@ -1,4 +1,5 @@
 const csvtojson = require("csvtojson");
+const xlsx = require("xlsx");
 const User = require("../model/user");
 const Account = require("../model/account");
 const Agent = require("../model/agent");
@@ -7,7 +8,6 @@ const LOB = require("../model/lob");
 const Carrier = require("../model/carrier");
 
 async function processAndSaveData(data) {
-  try {
     for (const item of data) {
       // Create Account document
       const account = new Account({
@@ -70,24 +70,47 @@ async function processAndSaveData(data) {
       Policy.findByIdAndUpdate(policy._id, { user_id: user._id });
       Account.findByIdAndUpdate(account._id, { user_id: user._id });
     }
-  } catch (error) {
-    console.error(error);
-  }
+   
 }
 
 module.exports = {
-  CSVFileUploader: (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+  FileUploader: (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+      const fileBuffer = req.file.buffer;
+      const fileContent = fileBuffer.toString();
+      if (req.file.mimetype === "text/csv") {
+        csvtojson()
+          .fromString(fileContent)
+          .then((data) => {
+            processAndSaveData(data)
+              .then(() => {
+                res.status(200).json({ message: "Data uploaded successfully" });
+              })
+              .catch((error) => {
+                res.status(500).json({ error: "Error processing data", error });
+              });
+          });
+      } else if (req.file.originalname.endsWith(".xlsx")) {
+        const workbook = xlsx.read(fileBuffer, { type: "buffer" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const data = xlsx.utils.sheet_to_json(sheet);
+        processAndSaveData(data)
+          .then(() => {
+            res.status(200).json({ message: "Data uploaded successfully" });
+          })
+          .catch((error) => {
+            res.status(500).json({ error: "Error processing data", error });
+          });
+      } else {
+        return res.status(400).json({ error: "Unsupported file format" });
+      }
+ 
+    } catch (error) {
+      res.status(500).json({ error: "Error processing data" });
     }
-
-    const fileBuffer = req.file.buffer;
-    const fileContent = fileBuffer.toString();
-    csvtojson()
-      .fromString(fileContent)
-      .then(async (data) => {
-        await processAndSaveData(data);
-        res.status(200).json({ message: "Data uploaded successfully" });
-      });
   },
 };

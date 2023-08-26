@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const userRouter = require("./routers/user-router");
 const accountRouter = require("./routers/account-router");
 const policyRouter = require("./routers/policy-router");
-const csvRouter = require("./routers/csv-uploder-router");
+const csvRouter = require("./routers/file-uploder-router");
 
 // Set the "public" directory path
 app.set("public", `${__dirname}/public`);
